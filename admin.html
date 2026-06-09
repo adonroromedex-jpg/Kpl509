@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPL509 — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dark:#0a1f44;--blue:#1e3a5f;--orange:#f59e0b;--amber:#d97706;
+  --white:#fff;--light:#f8fafc;--border:#e2e8f0;
+  --text:#1e293b;--muted:#64748b;--success:#10b981;--danger:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Barlow',sans-serif;background:var(--light);color:var(--text);min-height:100vh;}
+
+/* ── LOGIN ── */
+.login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:var(--dark);
+}
+.login-box{
+  background:var(--white);border-radius:16px;padding:48px 40px;
+  width:100%;max-width:400px;text-align:center;
+}
+.login-logo{
+  font-family:'Barlow Condensed',sans-serif;font-size:32px;
+  font-weight:800;color:var(--orange);letter-spacing:3px;margin-bottom:8px;
+}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:32px;letter-spacing:1px;}
+.login-field{
+  display:flex;flex-direction:column;gap:6px;margin-bottom:16px;text-align:left;
+}
+.login-field label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;}
+.login-field input{
+  padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:15px;font-family:'Barlow',sans-serif;outline:none;
+  transition:border-color 0.2s;
+}
+.login-field input:focus{border-color:var(--orange);}
+.btn-login{
+  width:100%;padding:13px;background:var(--dark);color:var(--orange);
+  border:none;border-radius:8px;font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:700;letter-spacing:2px;cursor:pointer;
+  transition:all 0.2s;margin-top:8px;
+}
+.btn-login:hover{background:var(--blue);}
+.login-error{
+  color:var(--danger);font-size:13px;margin-top:12px;
+  display:none;background:rgba(239,68,68,0.08);
+  padding:8px 12px;border-radius:6px;
+}
+.login-hint{font-size:11px;color:var(--muted);margin-top:16px;}
+
+/* ── ADMIN LAYOUT ── */
+.admin-wrap{display:none;min-height:100vh;flex-direction:column;}
+
+/* TOP BAR */
+.topbar{
+  background:var(--dark);padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-logo{
+  font-family:'Barlow Condensed',sans-serif;font-size:20px;
+  font-weight:800;color:var(--orange);letter-spacing:2px;
+}
+.topbar-logo span{color:var(--white);}
+.topbar-right{display:flex;gap:10px;align-items:center;}
+.topbar-link{
+  color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;text-decoration:none;transition:color 0.2s;
+}
+.topbar-link:hover{color:var(--orange);}
+.btn-logout{
+  padding:7px 16px;background:transparent;border:1px solid rgba(245,158,11,0.3);
+  color:var(--orange);border-radius:6px;font-family:'Barlow',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;
+}
+.btn-logout:hover{background:rgba(245,158,11,0.1);}
+
+/* MAIN AREA */
+.admin-main{
+  display:grid;grid-template-columns:1fr 380px;
+  gap:28px;padding:32px;max-width:1200px;margin:0 auto;width:100%;
+}
+
+/* SECTION TITLE */
+.sec-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;
+  color:var(--dark);letter-spacing:0.5px;margin-bottom:20px;
+  padding-bottom:10px;border-bottom:3px solid var(--orange);display:inline-block;
+}
+
+/* FORM CARD */
+.form-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:12px;padding:28px;margin-bottom:24px;
+}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
+.field label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.field input,.field textarea,.field select{
+  padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;font-family:'Barlow',sans-serif;color:var(--text);
+  outline:none;transition:border-color 0.2s;width:100%;
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--orange);}
+.field textarea{min-height:180px;resize:vertical;line-height:1.7;}
+.field small{font-size:11px;color:var(--muted);}
+
+/* IMAGE UPLOAD */
+.img-upload-area{
+  border:2px dashed var(--border);border-radius:10px;
+  padding:24px;text-align:center;cursor:pointer;
+  transition:all 0.2s;background:var(--light);
+  position:relative;
+}
+.img-upload-area:hover{border-color:var(--orange);background:#fffbeb;}
+.img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.img-upload-area .upload-icon{font-size:28px;margin-bottom:8px;}
+.img-upload-area p{font-size:13px;color:var(--muted);}
+.img-upload-area span{color:var(--orange);font-weight:700;}
+.img-preview{
+  width:100%;aspect-ratio:16/9;border-radius:8px;
+  object-fit:cover;margin-top:12px;display:none;
+  border:1px solid var(--border);
+}
+
+/* URL input alternative */
+.or-divider{
+  display:flex;align-items:center;gap:10px;margin:12px 0;
+  font-size:11px;color:var(--muted);letter-spacing:1px;
+}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:8px;}
+.btn{
+  padding:11px 24px;border-radius:8px;border:none;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
+  letter-spacing:1px;transition:all 0.2s;display:flex;align-items:center;gap:8px;
+}
+.btn-publish{background:var(--dark);color:var(--orange);flex:1;justify-content:center;}
+.btn-publish:hover{background:var(--blue);transform:translateY(-1px);}
+.btn-draft{background:var(--light);color:var(--muted);border:1.5px solid var(--border);}
+.btn-draft:hover{border-color:var(--orange);color:var(--orange);}
+.btn-clear{background:transparent;color:var(--muted);border:1.5px solid var(--border);font-size:13px;padding:8px 16px;}
+.btn-clear:hover{border-color:var(--danger);color:var(--danger);}
+
+/* CHAR COUNTER */
+.char-wrap{display:flex;justify-content:space-between;align-items:center;}
+.char-count{font-size:11px;color:var(--muted);}
+
+/* SUCCESS TOAST */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--dark);color:var(--orange);padding:12px 28px;
+  border-radius:30px;font-size:14px;font-weight:600;
+  opacity:0;transition:all 0.3s;z-index:9999;pointer-events:none;
+  border:1px solid rgba(245,158,11,0.3);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ARTICLES LIST (right column) */
+.articles-panel{position:sticky;top:80px;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+.stat-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:10px;padding:16px;text-align:center;
+}
+.stat-num{
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;
+  font-weight:800;color:var(--orange);
+}
+.stat-label{font-size:11px;color:var(--muted);letter-spacing:1px;margin-top:2px;}
+
+.articles-list{display:flex;flex-direction:column;gap:10px;max-height:560px;overflow-y:auto;}
+.articles-list::-webkit-scrollbar{width:3px;}
+.articles-list::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
+
+.art-item{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  transition:border-color 0.2s;
+}
+.art-item:hover{border-color:var(--orange);}
+.art-thumb{
+  width:60px;height:45px;border-radius:6px;
+  background:var(--light);flex-shrink:0;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.art-thumb img{width:100%;height:100%;object-fit:cover;}
+.art-info{flex:1;min-width:0;}
+.art-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--orange);}
+.art-title{font-size:13px;font-weight:600;color:var(--dark);line-height:1.3;margin:3px 0;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.art-date{font-size:10px;color:var(--muted);}
+.art-actions{display:flex;gap:6px;flex-shrink:0;}
+.art-btn{
+  padding:5px 10px;border-radius:5px;border:none;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-size:11px;font-weight:600;
+  transition:all 0.2s;
+}
+.art-edit{background:var(--light);color:var(--muted);border:1px solid var(--border);}
+.art-edit:hover{border-color:var(--orange);color:var(--orange);}
+.art-del{background:rgba(239,68,68,0.08);color:var(--danger);border:1px solid rgba(239,68,68,0.2);}
+.art-del:hover{background:var(--danger);color:var(--white);}
+
+.empty-articles{
+  text-align:center;padding:40px 20px;color:var(--muted);
+  background:var(--white);border:1px solid var(--border);border-radius:10px;
+}
+.empty-articles h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--dark);margin-bottom:6px;}
+
+/* CONFIRM DIALOG */
+.confirm-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  z-index:500;align-items:center;justify-content:center;
+}
+.confirm-overlay.open{display:flex;}
+.confirm-box{
+  background:var(--white);border-radius:12px;padding:32px;
+  max-width:360px;width:90%;text-align:center;
+}
+.confirm-box h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;color:var(--dark);margin-bottom:8px;}
+.confirm-box p{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6;}
+.confirm-btns{display:flex;gap:10px;}
+.btn-cancel{flex:1;padding:11px;background:var(--light);border:1.5px solid var(--border);color:var(--muted);border-radius:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;}
+.btn-confirm-del{flex:1;padding:11px;background:var(--danger);color:var(--white);border:none;border-radius:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .admin-main{grid-template-columns:1fr;}
+  .articles-panel{position:static;}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">KPL509</div>
+    <div class="login-sub">PANNEAU D'ADMINISTRATION</div>
+
+    <div class="login-field">
+      <label>Identifiant</label>
+      <input type="text" id="login-user" placeholder="admin" onkeyup="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeyup="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">SE CONNECTER →</button>
+    <div class="login-error" id="login-error">Identifiant ou mot de passe incorrect.</div>
+    <div class="login-hint">💡 Par défaut : admin / kpl509admin</div>
+  </div>
+</div>
+
+<!-- ════ ADMIN ════ -->
+<div class="admin-wrap" id="adminWrap">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">KPL<span>509</span> · Admin</div>
+    <div class="topbar-right">
+      <a href="index.html" target="_blank" class="topbar-link">👁 Voir le site</a>
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="admin-main">
+
+    <!-- COLONNE GAUCHE — FORMULAIRE -->
+    <div>
+      <div class="sec-title" id="form-section-title">Publier un article</div>
+
+      <div class="form-card">
+
+        <!-- TITRE -->
+        <div class="field">
+          <div class="char-wrap">
+            <label>Titre de l'article *</label>
+            <span class="char-count" id="title-count">0 / 100</span>
+          </div>
+          <input type="text" id="art-title" maxlength="100"
+            placeholder="Ex: Les 5 découvertes qui changent le monde en 2026"
+            oninput="document.getElementById('title-count').textContent=this.value.length+' / 100'">
+        </div>
+
+        <!-- CATÉGORIE -->
+        <div class="field">
+          <label>Catégorie *</label>
+          <select id="art-cat">
+            <option value="">— Choisir une catégorie —</option>
+            <option value="actualites">Actualités mondiales</option>
+            <option value="insolites">Insolites</option>
+            <option value="breaking">Breaking News</option>
+            <option value="bienetre">Bien-être</option>
+            <option value="tech">Technologie</option>
+            <option value="sport">Sport</option>
+          </select>
+        </div>
+
+        <!-- CONTENU -->
+        <div class="field">
+          <div class="char-wrap">
+            <label>Contenu de l'article *</label>
+            <span class="char-count" id="content-count">0 caractères</span>
+          </div>
+          <textarea id="art-content"
+            placeholder="Rédigez votre article ici...&#10;&#10;Vous pouvez écrire plusieurs paragraphes.&#10;Sautez une ligne entre chaque paragraphe."
+            oninput="document.getElementById('content-count').textContent=this.value.length+' caractères'"></textarea>
+          <small>Minimum 100 caractères recommandé pour un bon article.</small>
+        </div>
+
+        <!-- IMAGE -->
+        <div class="field">
+          <label>Image de couverture (optionnel)</label>
+
+          <!-- Upload fichier -->
+          <div class="img-upload-area" id="uploadArea">
+            <input type="file" accept="image/*" onchange="handleImageUpload(this)">
+            <div class="upload-icon">🖼</div>
+            <p>Glissez une image ou <span>cliquez pour choisir</span></p>
+            <p style="font-size:11px;margin-top:4px;">JPG, PNG, WEBP — Max 2MB</p>
+          </div>
+          <img id="img-preview" class="img-preview" alt="Aperçu">
+
+          <div class="or-divider">OU entrez une URL</div>
+
+          <input type="url" id="art-image-url"
+            placeholder="https://exemple.com/image.jpg"
+            oninput="previewUrl(this.value)">
+          <small>Utilisez une URL d'image publique (Unsplash, Pexels, etc.)</small>
+        </div>
+
+        <!-- BOUTONS -->
+        <div class="btn-row">
+          <button class="btn btn-publish" onclick="publishArticle()">
+            🚀 PUBLIER L'ARTICLE
+          </button>
+          <button class="btn btn-draft" onclick="clearForm()">✕ Effacer</button>
+        </div>
+
+      </div>
+
+      <!-- MOT DE PASSE ADMIN -->
+      <div class="form-card" style="margin-top:0;">
+        <div class="sec-title" style="font-size:15px;border-color:var(--muted);">⚙️ Paramètres Admin</div>
+        <div class="field">
+          <label>Changer le mot de passe Admin</label>
+          <input type="password" id="new-pass" placeholder="Nouveau mot de passe">
+        </div>
+        <div class="field">
+          <label>Confirmer le mot de passe</label>
+          <input type="password" id="confirm-pass" placeholder="Confirmer">
+        </div>
+        <button class="btn btn-draft" onclick="changePassword()" style="width:100%;justify-content:center;">
+          🔒 Mettre à jour le mot de passe
+        </button>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE — ARTICLES PUBLIÉS -->
+    <div class="articles-panel">
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-label">ARTICLES</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-today">0</div>
+          <div class="stat-label">AUJOURD'HUI</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="stat-cats">0</div>
+          <div class="stat-label">CATÉGORIES</div>
+        </div>
+      </div>
+
+      <div class="sec-title">Articles publiés</div>
+      <div class="articles-list" id="articles-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>⚠️ Supprimer l'article ?</h3>
+    <p>Cette action est irréversible. L'article sera supprimé définitivement du site.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancel" onclick="document.getElementById('confirmOverlay').classList.remove('open')">Annuler</button>
+      <button class="btn-confirm-del" id="confirm-del-btn">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+const STORAGE_KEY    = 'kpl509_articles';
+const ADMIN_KEY      = 'kpl509_admin_pass';
+const DEFAULT_PASS   = 'kpl509admin';
+const DEFAULT_USER   = 'admin';
+let editingIdx       = -1;
+
+// ══════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const savedPass = localStorage.getItem(ADMIN_KEY) || DEFAULT_PASS;
+
+  if (user === DEFAULT_USER && pass === savedPass) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminWrap').style.display   = 'flex';
+    renderAll();
+  } else {
+    const err = document.getElementById('login-error');
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+
+function logout() {
+  document.getElementById('adminWrap').style.display   = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('login-pass').value = '';
+}
+
+// ══════════════════════════════════════════
+// ARTICLES STORAGE
+// ══════════════════════════════════════════
+function getArticles() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function saveArticles(articles) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(articles));
+}
+
+// ══════════════════════════════════════════
+// PUBLIER / MODIFIER
+// ══════════════════════════════════════════
+function publishArticle() {
+  const title   = document.getElementById('art-title').value.trim();
+  const cat     = document.getElementById('art-cat').value;
+  const content = document.getElementById('art-content').value.trim();
+  const urlImg  = document.getElementById('art-image-url').value.trim();
+  const b64Img  = document.getElementById('img-preview').src || '';
+
+  // Validation
+  if (!title)   { showToast('⚠️ Entrez un titre'); return; }
+  if (!cat)     { showToast('⚠️ Choisissez une catégorie'); return; }
+  if (!content || content.length < 30) { showToast('⚠️ Contenu trop court (min. 30 caractères)'); return; }
+
+  const image = urlImg || (b64Img.startsWith('data:') ? b64Img : '');
+
+  const article = {
+    title,
+    cat,
+    content,
+    image,
+    date: new Date().toISOString(),
+  };
+
+  const articles = getArticles();
+
+  if (editingIdx >= 0) {
+    // MODE ÉDITION
+    article.date = articles[editingIdx].date; // Garder la date originale
+    article.updatedAt = new Date().toISOString();
+    articles[editingIdx] = article;
+    editingIdx = -1;
+    document.getElementById('form-section-title').textContent = 'Publier un article';
+    showToast('✅ Article mis à jour !');
+  } else {
+    // NOUVEAU
+    articles.unshift(article); // Ajouter en tête de liste
+    showToast('🚀 Article publié avec succès !');
+  }
+
+  saveArticles(articles);
+  clearForm();
+  renderAll();
+}
+
+// ══════════════════════════════════════════
+// ÉDITER
+// ══════════════════════════════════════════
+function editArticle(idx) {
+  const articles = getArticles();
+  const art = articles[idx];
+  editingIdx = idx;
+
+  document.getElementById('art-title').value   = art.title;
+  document.getElementById('art-cat').value     = art.cat;
+  document.getElementById('art-content').value = art.content;
+  document.getElementById('art-image-url').value = art.image || '';
+  document.getElementById('title-count').textContent   = art.title.length + ' / 100';
+  document.getElementById('content-count').textContent = art.content.length + ' caractères';
+
+  if (art.image && !art.image.startsWith('data:')) {
+    previewUrl(art.image);
+  }
+
+  document.getElementById('form-section-title').textContent = '✏️ Modifier l\'article';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('✏️ Mode édition activé');
+}
+
+// ══════════════════════════════════════════
+// SUPPRIMER
+// ══════════════════════════════════════════
+function deleteArticle(idx) {
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.getElementById('confirm-del-btn').onclick = () => {
+    const articles = getArticles();
+    articles.splice(idx, 1);
+    saveArticles(articles);
+    document.getElementById('confirmOverlay').classList.remove('open');
+    renderAll();
+    showToast('🗑 Article supprimé');
+  };
+}
+
+// ══════════════════════════════════════════
+// RENDER LISTE ARTICLES
+// ══════════════════════════════════════════
+const catEmoji = {
+  actualites:'🌍', insolites:'⭐', breaking:'🔴',
+  bienetre:'💚', tech:'💻', sport:'⚽'
+};
+const catLabels = {
+  actualites:'Actualités', insolites:'Insolites',
+  breaking:'Breaking', bienetre:'Bien-être',
+  tech:'Tech', sport:'Sport'
+};
+
+function renderAll() {
+  renderList();
+  renderStats();
+}
+
+function renderList() {
+  const articles = getArticles();
+  const list = document.getElementById('articles-list');
+
+  if (!articles.length) {
+    list.innerHTML = `
+      <div class="empty-articles">
+        <h3>Aucun article</h3>
+        <p>Publiez votre premier article ci-contre.</p>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = articles.map((art, i) => {
+    const date = new Date(art.date).toLocaleDateString('fr-FR', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const emoji = catEmoji[art.cat] || '📰';
+    const label = catLabels[art.cat] || art.cat;
+    const thumbHtml = art.image
+      ? `<img src="${art.image}" alt="" onerror="this.style.display='none'">`
+      : emoji;
+
+    return `
+    <div class="art-item">
+      <div class="art-thumb">${thumbHtml}</div>
+      <div class="art-info">
+        <div class="art-cat">${label}</div>
+        <div class="art-title">${art.title}</div>
+        <div class="art-date">📅 ${date}</div>
+      </div>
+      <div class="art-actions">
+        <button class="art-btn art-edit" onclick="editArticle(${i})">✏</button>
+        <button class="art-btn art-del"  onclick="deleteArticle(${i})">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats() {
+  const articles = getArticles();
+  const today = articles.filter(a => {
+    const d = new Date(a.date);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  }).length;
+  const cats = new Set(articles.map(a => a.cat)).size;
+
+  document.getElementById('stat-total').textContent = articles.length;
+  document.getElementById('stat-today').textContent = today;
+  document.getElementById('stat-cats').textContent  = cats;
+}
+
+// ══════════════════════════════════════════
+// IMAGE UPLOAD
+// ══════════════════════════════════════════
+function handleImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('⚠️ Image trop lourde — max 2MB');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('img-preview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('art-image-url').value = '';
+    showToast('✅ Image chargée');
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewUrl(url) {
+  if (!url) return;
+  const preview = document.getElementById('img-preview');
+  preview.src = url;
+  preview.style.display = 'block';
+  preview.onerror = () => { preview.style.display = 'none'; };
+}
+
+// ══════════════════════════════════════════
+// CLEAR FORM
+// ══════════════════════════════════════════
+function clearForm() {
+  document.getElementById('art-title').value    = '';
+  document.getElementById('art-cat').value      = '';
+  document.getElementById('art-content').value  = '';
+  document.getElementById('art-image-url').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('img-preview').src    = '';
+  document.getElementById('title-count').textContent   = '0 / 100';
+  document.getElementById('content-count').textContent = '0 caractères';
+  editingIdx = -1;
+  document.getElementById('form-section-title').textContent = 'Publier un article';
+}
+
+// ══════════════════════════════════════════
+// MOT DE PASSE
+// ══════════════════════════════════════════
+function changePassword() {
+  const np  = document.getElementById('new-pass').value;
+  const cp  = document.getElementById('confirm-pass').value;
+  if (!np || np.length < 6) { showToast('⚠️ Mot de passe trop court (min. 6 caractères)'); return; }
+  if (np !== cp) { showToast('⚠️ Les mots de passe ne correspondent pas'); return; }
+  localStorage.setItem(ADMIN_KEY, np);
+  document.getElementById('new-pass').value    = '';
+  document.getElementById('confirm-pass').value = '';
+  showToast('✅ Mot de passe mis à jour !');
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
