@@ -14,8 +14,8 @@
       --white:#ffffff; --light:#f8fafc; --border:#e2e8f0;
       --text:#1e293b; --muted:#64748b; --gray:#94a3b8;
     }
-    html { scroll-behavior: smooth; }
-    body { font-family:'Barlow',sans-serif; background:var(--light); color:var(--text); font-size:15px; line-height:1.6; }
+    html { scroll-behavior: smooth; overflow-y: auto !important; }
+    body { font-family:'Barlow',sans-serif; background:var(--light); color:var(--text); font-size:15px; line-height:1.6; overflow-y: auto !important; }
     a { text-decoration:none; color:inherit; cursor:pointer; }
     img { max-width:100%; display:block; object-fit:cover; }
     .page { display:none; }
@@ -372,7 +372,9 @@
   --text:#e2e8f0;--muted:#4a5568;--border:rgba(139,92,246,0.2);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow:hidden;}
+/* LVP body styles scoped - don't override KPL */
+#page-lyric-app .app{font-family:'Rajdhani',sans-serif;}
+#page-lyric-app .app.hidden{display:none;}
 
 /* ── AUTH SCREEN ── */
 .auth-screen{
@@ -422,7 +424,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 .auth-demo:hover{background:rgba(6,182,212,0.15);}
 
 /* ── APP LAYOUT ── */
-.app{display:flex;height:100vh;overflow:hidden;}
+.app{display:flex;height:calc(100vh - 102px);overflow:hidden;}
 .app.hidden{display:none;}
 
 /* ── SIDEBAR ── */
@@ -962,6 +964,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
 .le-mb{padding:2px 4px;border-radius:3px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:8px;font-weight:700;cursor:pointer;transition:all 0.15s;width:100%;text-align:center;}
 .le-mb:hover{border-color:var(--gold);color:var(--gold);}
 .le-mb.mkd{background:rgba(16,185,129,0.12);border-color:var(--green);color:var(--green);}
+
+/* Hide LVP auth inside KPL */
+#page-lyric-app .auth-screen { display: none !important; }
+#page-lyric-app .app { height: calc(100vh - 102px) !important; }
 </style>
 </head>
 <body>
@@ -1133,26 +1139,131 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
       <div class="lvp-feature"><div class="lvp-feature-icon">🎨</div><h3>Personnalisation Totale</h3><p>Police, couleur, taille, fond — tout est personnalisable.</p></div>
       <div class="lvp-feature"><div class="lvp-feature-icon">🌐</div><h3>100% En Ligne</h3><p>Aucune installation. Fonctionne dans ton navigateur.</p></div>
     </div>
+
+    <!-- TUTORIAL SECTION -->
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:32px;margin-bottom:40px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:var(--dark);margin-bottom:6px;padding-bottom:10px;border-bottom:3px solid var(--orange);display:inline-block;">📖 Tutoriel — Comment utiliser Lyric Video Pro</div>
+      <p style="font-size:13px;color:var(--muted);margin-top:16px;margin-bottom:24px;">Suivez ces étapes simples pour créer votre première vidéo lyric en quelques minutes.</p>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">1</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Créez un compte ou connectez-vous</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Cliquez sur "Lancer l'application" ci-dessus. Inscrivez-vous gratuitement avec votre email ou connectez-vous si vous avez déjà un compte. Le plan gratuit vous donne accès aux fonctions de base.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">2</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Créez un nouveau projet</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Dans le tableau de bord, cliquez sur <strong>"Nouveau projet"</strong>. Entrez le titre de la chanson et le nom de l'artiste. Ces informations apparaîtront sur votre vidéo.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">3</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Chargez votre musique</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Dans la section <strong>AUDIO</strong>, cliquez ou glissez-déposez votre fichier audio (MP3, WAV, AAC, OGG). L'application accepte tous les formats audio courants. Vous pouvez aussi ajuster la <strong>vitesse vocale</strong> (0.5x à 2x) pour mieux matcher les paroles avec la voix.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">4</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Collez vos paroles et analysez</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Dans la section <strong>PAROLES</strong>, collez le texte complet de votre chanson. Choisissez le mode de séparation : <em>par paragraphes</em> (recommandé), <em>4 mots par ligne</em>, ou <em>par ligne</em>. Cliquez <strong>"Analyser & Séparer"</strong> — l'app crée automatiquement toutes les lignes.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">5</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Synchronisez avec la musique (BPM + Offset)</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;"><strong>BPM :</strong> Lancez la musique et tapez le bouton <strong>"🥁 TAPER AU RYTHME"</strong> plusieurs fois en suivant le rythme — l'app détecte automatiquement le BPM.<br><br>
+            <strong>Offset :</strong> Cliquez <strong>"⏱ TAP START"</strong> puis appuyez exactement au moment où les paroles commencent dans la chanson. Toutes les lignes seront repositionnées automatiquement depuis ce moment.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">6</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Ajustez le timing sur la Timeline</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">La <strong>Timeline</strong> en bas montre chaque ligne comme un bloc. Vous pouvez :<br>
+            • <strong>Glisser</strong> un bloc pour changer son moment d'apparition<br>
+            • <strong>Redimensionner</strong> (bord droit) pour changer sa durée<br>
+            • Utiliser <strong>"+ ZOOM / − ZOOM"</strong> pour voir plus de détails<br>
+            • Cliquer <strong>"MARK"</strong> dans l'éditeur de lignes pendant la lecture pour enregistrer le timing précis</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">7</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Personnalisez le style visuel</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Dans le panneau gauche, personnalisez :<br>
+            • <strong>Police</strong> — choisissez parmi plusieurs familles typographiques<br>
+            • <strong>Style</strong> — Gras, Italique, Majuscules, Ombre, Contour, Lueur<br>
+            • <strong>Couleur</strong> — couleur du texte et couleur de mise en évidence (highlight)<br>
+            • <strong>Fond du texte</strong> — Noir, Flou, Dégradé, Néon...<br>
+            • <strong>Animation</strong> — Fade, Slide, Zoom, Glitch, Fire, Matrix et plus<br>
+            • <strong>Arrière-plan</strong> — couleurs dégradées ou votre propre image</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--dark);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">8</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">Mode Grand Écran — Projection live</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Cliquez <strong>"⛶ Plein écran"</strong> ou appuyez <strong>F</strong> pour passer en mode grand écran. Parfait pour les projections en église ou en concert. Utilisez les flèches ◀ ▶ pour avancer manuellement, ou laissez la synchronisation automatique gérer l'affichage. Appuyez <strong>Échap</strong> pour quitter.</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div style="width:36px;height:36px;background:var(--orange);color:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;flex-shrink:0;">9</div>
+          <div>
+            <h4 style="font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--dark);margin-bottom:6px;">⭐ PRO — Exportez en MP4</h4>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;">Avec le plan <strong>PRO ($15.78/mois)</strong>, cliquez <strong>"📤 Exporter"</strong>. Choisissez la résolution (HD, Full HD ou 4K), la durée par ligne, et lancez l'export. Votre vidéo lyric est générée directement dans le navigateur et téléchargeable en quelques secondes — prête pour YouTube, Instagram ou TikTok.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="background:var(--light);border-radius:8px;padding:16px;margin-top:24px;border-left:4px solid var(--orange);">
+        <strong style="font-size:13px;color:var(--dark);">💡 Raccourcis clavier :</strong>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;">
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">Espace</kbd> Play / Pause</span>
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">→</kbd> Ligne suivante</span>
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">←</kbd> Ligne précédente</span>
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">F</kbd> Plein écran</span>
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">Ctrl+S</kbd> Sauvegarder</span>
+          <span style="font-size:12px;color:var(--muted);"><kbd style="background:var(--dark);color:var(--orange);padding:2px 6px;border-radius:3px;font-size:10px;">Échap</kbd> Quitter plein écran</span>
+        </div>
+      </div>
+    </div>
     <div class="lvp-cta">
       <h2>Prêt à créer ta première Lyric Video ?</h2>
-      <p>Gratuit, sans inscription, directement dans ton navigateur.</p>
-      <a onclick="showPage('lyric-app')" class="lvp-btn-main" style="cursor:pointer;">🎵 Lancer Lyric Video Pro</a>
+      <p>Plan gratuit disponible · Plan PRO à $15.78/mois pour l'export MP4 et toutes les fonctions</p>
+      <a onclick="showPage('lyric-app')" class="lvp-btn-main" style="cursor:pointer;">🎵 Lancer l'application</a>
     </div>
   </div>
 </div>
 
 <!-- ===== LYRIC APP EMBEDDED ===== -->
-<div id="page-lyric-app" class="page" style="padding:0;overflow:hidden;">
+<div id="page-lyric-app" class="page" style="padding:0;overflow:hidden;height:calc(100vh - 58px);">
   <div style="padding:10px 20px;background:#0a1f44;display:flex;align-items:center;gap:12px;border-bottom:2px solid #f59e0b;flex-shrink:0;">
     <span onclick="showPage('lyric')" style="color:#94a3b8;cursor:pointer;font-size:12px;font-family:Barlow,sans-serif;font-weight:600;">← Retour</span>
     <span style="color:#f59e0b;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:3px;">🎵 LYRIC VIDEO PRO</span>
     <span style="font-size:10px;color:#64748b;margin-left:auto;">KPL509 · Edition Pro</span>
   </div>
-  <div style="height:calc(100vh - 58px - 44px);overflow:hidden;background:#03030a;">
+  <div style="height:calc(100vh - 58px - 44px);overflow:hidden;background:#03030a;display:flex;flex-direction:column;">
     <!-- ══════════════════════════════════════
      AUTH SCREEN
 ══════════════════════════════════════ -->
-<div class="auth-screen" id="authScreen" style="display:none!important;">
+<div class="auth-screen" id="authScreen">
   <div class="auth-box">
     <div class="auth-logo">LYRIC<em>STUDIO</em> PRO</div>
     <div class="auth-sub">PROFESSIONAL LYRIC VIDEO MAKER</div>
@@ -1207,6 +1318,13 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Rajdha
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sb-logo">LYRIC<em>STUDIO</em></div>
+    <div style="padding:8px 12px;border-bottom:1px solid var(--border);">
+      <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:7px;padding:8px;text-align:center;">
+        <div id="planBadge" style="display:inline-block;background:var(--s2);border:1px solid var(--border);color:var(--muted);font-size:8px;font-weight:700;padding:2px 9px;border-radius:3px;letter-spacing:1px;margin-bottom:5px;">FREE PLAN</div>
+        <div style="font-size:8px;color:var(--muted);margin-bottom:6px;">Fonctions limitées</div>
+        <button onclick="openPricing()" style="width:100%;padding:6px;background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;border-radius:5px;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:7px;font-weight:900;letter-spacing:1px;">⚡ PASSER À PRO — $15.78/mois</button>
+      </div>
+    </div>
     <div class="sb-nav">
       <div class="sb-section">NAVIGATION</div>
       <div class="sb-item on" onclick="showPage('dashboard',this)"><span class="ic">📊</span> Tableau de bord</div>
@@ -3250,7 +3368,183 @@ window.loginUser=function(user){
   if(user.id!=='demo') localStorage.setItem('lsp_session',JSON.stringify({id:user.id}));
 };
 
+
+// ══════════════════════════════════════
+// PRO PLAN SYSTEM
+// ══════════════════════════════════════
+const FREE_ANIMS_LIST = ['fadeIn','slideLeft'];
+const FREE_FONTS_LIST = ['Bebas Neue','Montserrat'];
+const FREE_BGS_LIST = ['dark-blue','black'];
+const MAX_FREE_SONGS = 3;
+
+// REPLACE THESE WITH YOUR REAL LINKS
+const STRIPE_LINK = 'https://buy.stripe.com/9B6bJ170he4racx2F0aAw00';
+const PAYPAL_LINK = 'https://www.paypal.com/ncp/payment/J2H384FDR6YYJ';
+function isPro(){ return localStorage.getItem('lsp_pro')==='1'; }
+
+function activatePro(){
+  localStorage.setItem('lsp_pro','1');
+  updatePlanBadge();
+  closePricing();
+  toast('🎉 Plan PRO activé ! Toutes les fonctions débloquées !');
+}
+
+function updatePlanBadge(){
+  const b = document.getElementById('planBadge');
+  if(!b) return;
+  if(isPro()){
+    b.textContent='⭐ PRO';
+    b.style.cssText='display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:8px;font-weight:900;padding:2px 9px;border-radius:3px;letter-spacing:1px;margin-bottom:5px;border:none;';
+  }
+}
+
+function openPricing(){
+  document.getElementById('pricingModal').classList.add('open');
+  document.getElementById('paySection').style.display='none';
+}
+function closePricing(){ document.getElementById('pricingModal').classList.remove('open'); }
+function showPayment(){ document.getElementById('paySection').style.display='block'; document.getElementById('paySection').scrollIntoView({behavior:'smooth'}); }
+function payStripe(){ window.open(STRIPE_LINK,'_blank'); toast('🔄 Redirection vers Stripe...'); }
+function payPayPal(){ window.open(PAYPAL_LINK,'_blank'); toast('🔄 Redirection vers PayPal...'); }
+
+// Override setAnim
+const __setAnim = setAnim;
+function setAnim(id){
+  if(!FREE_ANIMS_LIST.includes(id) && !isPro()){ openPricing(); toast('🔒 Animation PRO !'); return; }
+  __setAnim(id);
+}
+
+// Override setFont
+const __setFont = setFont;
+function setFont(name){
+  if(!FREE_FONTS_LIST.includes(name) && !isPro()){ openPricing(); toast('🔒 Police PRO !'); return; }
+  __setFont(name);
+}
+
+// Override setBG
+const __setBG = setBG;
+function setBG(id){
+  if(!FREE_BGS_LIST.includes(id) && !isPro()){ openPricing(); toast('🔒 Arrière-plan PRO !'); return; }
+  __setBG(id);
+}
+
+// Override openExport
+const __openExport = openExport;
+function openExport(){
+  if(!isPro()){ openPricing(); toast('🔒 Export MP4 réservé aux membres PRO !'); return; }
+  __openExport();
+}
+
+// Override saveSong
+const __saveSong = saveSong;
+function saveSong(){
+  if(!isPro() && S.songs && S.songs.length >= MAX_FREE_SONGS && !S.currentSongId){
+    openPricing(); toast('🔒 Maximum '+MAX_FREE_SONGS+' projets en version FREE !'); return;
+  }
+  __saveSong();
+}
+
+// Mark locked items visually
+function markLockedItems(){
+  if(isPro()) return;
+  // Animations
+  document.querySelectorAll('.anim-card').forEach((card,i)=>{
+    if(!FREE_ANIMS_LIST.includes(ANIMS[i]?.id)){
+      card.style.position='relative'; card.style.opacity='0.45';
+      if(!card.querySelector('.lock-badge')){
+        const b=document.createElement('span'); b.className='lock-badge'; b.textContent='🔒';
+        card.appendChild(b);
+      }
+    }
+  });
+  // Fonts
+  document.querySelectorAll('.font-card').forEach((card,i)=>{
+    if(!FREE_FONTS_LIST.includes(FONTS[i]?.name)){
+      card.style.position='relative'; card.style.opacity='0.45';
+      if(!card.querySelector('.lock-badge')){
+        const b=document.createElement('span'); b.className='lock-badge'; b.textContent='🔒';
+        card.appendChild(b);
+      }
+    }
+  });
+  // Backgrounds
+  document.querySelectorAll('.bg-card').forEach((card,i)=>{
+    if(!FREE_BGS_LIST.includes(BGS[i]?.id)){
+      card.style.position='relative'; card.style.opacity='0.45';
+      if(!card.querySelector('.lock-badge')){
+        const b=document.createElement('span'); b.className='lock-badge'; b.textContent='🔒';
+        card.appendChild(b);
+      }
+    }
+  });
+}
+
+// Override loginUser to mark items after login
+const __loginUser = loginUser;
+function loginUser(user){
+  __loginUser(user);
+  setTimeout(()=>{ markLockedItems(); updatePlanBadge(); }, 400);
+}
+
+// Close on ESC
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePricing(); });
+
+// Remove demo login option - redirect to register
+// Also init plan badge on load
+setTimeout(updatePlanBadge, 500);
 </script>
+
+<!-- PRICING MODAL -->
+<div class="pricing-modal" id="pricingModal">
+  <div class="pricing-box">
+    <button class="pr-close" onclick="closePricing()">✕</button>
+    <div class="pricing-title">LYRICSTUDIO PRO</div>
+    <div class="pricing-sub">Déverrouillez toute la puissance de LyricStudio Pro</div>
+    <div class="pricing-plans">
+      <div class="plan-card">
+        <div class="plan-name" style="color:var(--muted);">FREE</div>
+        <div class="plan-price">$0 <span>/mois</span></div>
+        <ul class="plan-feats">
+          <li class="ok">2 animations (Fade, Slide)</li>
+          <li class="ok">2 polices (Bebas, Montserrat)</li>
+          <li class="ok">2 arrière-plans</li>
+          <li class="ok">Preview temps réel</li>
+          <li class="ok">3 projets maximum</li>
+          <li class="no">Téléchargement MP4</li>
+          <li class="no">20+ animations</li>
+          <li class="no">9 polices</li>
+          <li class="no">Export HD/4K</li>
+        </ul>
+        <button class="plan-btn-f" onclick="closePricing()">Continuer gratuitement</button>
+      </div>
+      <div class="plan-card pro-card">
+        <div class="plan-popular">⭐ RECOMMANDÉ</div>
+        <div class="plan-name" style="color:var(--gold);">PRO</div>
+        <div class="plan-price">$15.78 <span>/mois</span></div>
+        <ul class="plan-feats">
+          <li class="ok">20+ animations pro</li>
+          <li class="ok">9 polices exclusives</li>
+          <li class="ok">9 arrière-plans + image</li>
+          <li class="ok">Export MP4 illimité</li>
+          <li class="ok">HD / Full HD / 4K</li>
+          <li class="ok">Projets illimités</li>
+          <li class="ok">BPM auto-detect</li>
+          <li class="ok">Timeline avancée</li>
+          <li class="ok">Mode Grand Écran Pro</li>
+        </ul>
+        <button class="plan-btn-p" onclick="showPayment()">🚀 PASSER À PRO</button>
+      </div>
+    </div>
+    <div class="pay-section" id="paySection" style="display:none;">
+      <div class="pay-title">CHOISISSEZ VOTRE MOYEN DE PAIEMENT</div>
+      <div class="pay-methods">
+        <button class="pay-btn pay-stripe" onclick="payStripe()">💳 Stripe<br><small style="font-size:9px;opacity:0.8;">Carte bancaire</small></button>
+        <button class="pay-btn pay-paypal" onclick="payPayPal()">🅿️ PayPal<br><small style="font-size:9px;opacity:0.8;">Compte PayPal</small></button>
+      </div>
+      <p style="text-align:center;font-size:9px;color:var(--muted);margin-top:10px;">🔒 Paiement sécurisé · Annulation à tout moment</p>
+    </div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -3652,6 +3946,22 @@ let isAdmin = sessionStorage.getItem('kpl509_admin') === '1';
 // ══════════════════════════════════════
 // PAGES
 // ══════════════════════════════════════
+const PAGE_URLS = {
+  'home': '/', 'actualites': '/actualites', 'insolites': '/insolites',
+  'breaking': '/breaking', 'sport': '/sport', 'lyric': '/lyric',
+  'lyric-app': '/lyricstudio', 'books': '/livres', 'about': '/apropos',
+  'contact': '/contact', 'legal': '/mentions-legales',
+  'article': '/article', 'admin': '/admin', 'admin-login': '/admin'
+};
+
+const PAGE_URLS = {
+  'home':'/', 'actualites':'/actualites', 'insolites':'/insolites',
+  'breaking':'/breaking', 'sport':'/sport', 'lyric':'/lyric',
+  'lyric-app':'/lyricstudio', 'books':'/livres', 'about':'/apropos',
+  'contact':'/contact', 'legal':'/mentions-legales',
+  'article':'/article', 'admin':'/admin', 'admin-login':'/admin'
+};
+
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const pg = document.getElementById('page-' + name);
@@ -3665,16 +3975,44 @@ function showPage(name) {
   if (footer) footer.style.display = (isAdminPage || isLvpApp) ? 'none' : '';
   if (ticker) ticker.style.display = (isAdminPage || isLvpApp) ? 'none' : '';
   window.scrollTo(0, 0);
+  // History API
+  if (!isAdminPage) {
+    try { window.history.pushState({page:name}, '', PAGE_URLS[name]||'/'+name); } catch(e){}
+  }
   if (name === 'home') { renderArticles(); renderSocialWidget(); }
   if (name === 'books') renderBooks();
   if (name === 'admin') { renderAdminArticles(); renderAdminBooks(); loadAdminForms(); }
   if (name === 'legal') applyLegalToPage();
 }
 
-function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+window.addEventListener('popstate', function(e) {
+  if (e.state && e.state.page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const pg = document.getElementById('page-' + e.state.page);
+    if (pg) pg.classList.add('active');
+  }
+});
 
+function handleDirectURL() {
+  const path = window.location.pathname;
+  const map = {
+    '/actualites':'home','/insolites':'home','/breaking':'home','/sport':'home',
+    '/lyric':'lyric','/lyricstudio':'lyric-app','/livres':'books',
+    '/apropos':'about','/contact':'contact','/mentions-legales':'legal'
+  };
+  const catMap = {'/actualites':'actualites','/insolites':'insolites','/breaking':'breaking','/sport':'sport'};
+  const pg = map[path];
+  if (pg) {
+    showPage(pg);
+    if (catMap[path]) setTimeout(()=>filterAndGo(catMap[path]),100);
+  }
+  const artMatch = path.match(/^\/article\/(\d+)$/);
+  if (artMatch) openArticle(parseInt(artMatch[1]));
+}
 function filterAndGo(cat) {
   showPage('home');
+  const catUrls = {actualites:'/actualites',insolites:'/insolites',breaking:'/breaking',sport:'/sport',bienetre:'/bienetre',tech:'/technologie'};
+  try { window.history.replaceState({page:'home',cat:cat}, '', catUrls[cat]||'/'); } catch(e) {}
   setTimeout(() => {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     const btn = document.querySelector(`.cat-btn[onclick*="${cat}"]`);
@@ -3766,8 +4104,10 @@ function openArticle(id) {
   img.alt = a.title;
   img.parentElement.style.display = '';
   document.getElementById('art-content').innerHTML = parseContent(a.content);
+  // Update URL for article
+  try { window.history.pushState({page:'article',id:id}, '', '/article/' + id); } catch(e) {}
   // Share buttons
-  const url = window.location.href.split('#')[0] + '#article-' + id;
+  const url = window.location.origin + '/article/' + id;
   document.getElementById('artShareBtns').innerHTML = `
     <button class="art-share-btn" style="background:var(--orange);color:var(--dark);" onclick="copyLink(${id})">🔗 Copier le lien</button>
     <button class="art-share-btn" style="background:#25D366;color:#fff;" onclick="shareWA(${id})">💬 WhatsApp</button>
@@ -4213,6 +4553,8 @@ renderArticles();
 renderSocialWidget();
 applySettingsOnLoad();
 checkURLParams();
+handleDirectURL();
+handleDirectURL();
 
 
 // ========== LYRIC STUDIO PRO JS ==========
