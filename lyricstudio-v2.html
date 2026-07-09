@@ -867,7 +867,10 @@ function checkPassStrength(pass){
   if(!pass.length){bar.style.width='0%';hint.textContent='';return;}
   const i=Math.max(0,s-1);bar.style.width=widths[i];bar.style.background=colors[i];hint.textContent=labels[i];hint.style.color=colors[i];
 }
-function showTerms(){alert('📋 Conditions\n\n'+(localStorage.getItem('lsp_terms')||"Vos données sont stockées localement. Aucune donnée n'est partagée sans votre consentement."));}
+function showTerms(){
+  var t=localStorage.getItem('lsp_terms')||"CONDITIONS D'UTILISATION\n\nEn utilisant LyricStudio Pro, vous acceptez les conditions suivantes :\n\n1. Vos données (projets, paroles) sont stockées localement sur votre appareil.\n2. Aucune donnée personnelle n'est transmise à des tiers.\n3. Le contenu créé vous appartient entièrement.\n4. Le plan PRO ($15.78/mois) débloque toutes les fonctionnalités.\n5. L'abonnement peut être annulé à tout moment.\n\nPour toute question : contact.devlop@kpl509.com";
+  alert(t);
+}
 function loginWithGoogle(){alert('⚙️ Connexion Google\n\nActivation via Google Cloud Console requise.');}
 function doRegister(){
   const name=document.getElementById('reg-name').value.trim();
@@ -907,8 +910,18 @@ function loginUser(user){
 function doLogout(){
   localStorage.removeItem('lsp_session');
   S.user=null;
+  S.songs=[];
+  S.lines=[];
+  S.currentLine=0;
+  S.playing=false;
+  if(S.aud){S.aud.pause();S.aud.src='';}
   document.getElementById('app').classList.add('hidden');
   document.getElementById('authScreen').classList.remove('hidden');
+  // Clear form fields
+  const t=document.getElementById('song-title');
+  const a=document.getElementById('song-artist');
+  const l=document.getElementById('lyrics-input');
+  if(t)t.value='';if(a)a.value='';if(l)l.value='';
 }
 
 function saveUserData(){
@@ -1982,6 +1995,106 @@ try{
   const sess=localStorage.getItem('lsp_session');
   if(sess){const s=JSON.parse(sess);const users=getUsers();const u=users.find(x=>x.id===s.id);if(u) loginUser(u);}
 }catch(e){}
+
+// ===== PRO PLAN =====
+const STRIPE_LINK = 'https://buy.stripe.com/9B6bJ170he4racx2F0aAw00';
+const PAYPAL_LINK = 'https://www.paypal.com/ncp/payment/J2H384FDR6YYJ';
+
+function isPro(){ return localStorage.getItem('lsp_pro')==='1'; }
+function activatePro(){ localStorage.setItem('lsp_pro','1'); closePricing(); toast('🎉 Plan PRO activé !'); }
+
+function openPricing(){
+  const m = document.getElementById('pricingModal');
+  if(m){ m.style.display='flex'; document.getElementById('paymentMethods').style.display='none'; }
+}
+function closePricing(){
+  const m = document.getElementById('pricingModal');
+  if(m) m.style.display='none';
+}
+function showPaymentMethods(){
+  document.getElementById('paymentMethods').style.display='block';
+}
+function payStripe(){ window.open(STRIPE_LINK,'_blank'); toast('🔄 Redirection vers Stripe...'); }
+function payPayPal(){ window.open(PAYPAL_LINK,'_blank'); toast('🔄 Redirection vers PayPal...'); }
+
+// Override openExport to check PRO
+const _origOpenExport = openExport;
+function openExport(){
+  if(!isPro()){ openPricing(); toast('🔒 Export MP4 réservé aux membres PRO !'); return; }
+  _origOpenExport();
+}
+
+// Add PRO button to sidebar
+document.addEventListener('DOMContentLoaded', function(){
+  // Add upgrade button to user-row in sidebar
+  const sbBottom = document.querySelector('.sb-bottom');
+  if(sbBottom && !isPro()){
+    const upgradeBtn = document.createElement('button');
+    upgradeBtn.className = 'sb-logout';
+    upgradeBtn.style.cssText = 'background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-weight:900;margin-bottom:6px;';
+    upgradeBtn.textContent = '⚡ Passer à PRO';
+    upgradeBtn.onclick = openPricing;
+    sbBottom.insertBefore(upgradeBtn, sbBottom.firstChild);
+  }
+});
+
+// Close pricing on ESC
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closePricing();
+});
 </script>
+
+<!-- PRICING MODAL -->
+<div id="pricingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+  <div style="background:#07071a;border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:32px;width:100%;max-width:660px;max-height:90vh;overflow-y:auto;position:relative;margin:20px;">
+    <button onclick="closePricing()" style="position:absolute;top:14px;right:18px;background:none;border:none;color:#4a5568;cursor:pointer;font-size:20px;line-height:1;">✕</button>
+    <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:900;text-align:center;margin-bottom:4px;background:linear-gradient(135deg,#a78bfa,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">LYRICSTUDIO PRO</div>
+    <div style="text-align:center;color:#4a5568;font-size:11px;margin-bottom:24px;">Déverrouillez toute la puissance de LyricStudio Pro</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+      <!-- FREE -->
+      <div style="background:#0d0d24;border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:20px;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;color:#4a5568;margin-bottom:5px;">FREE</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;color:#f59e0b;margin-bottom:12px;">$0 <span style="font-size:11px;color:#4a5568;font-weight:400;">/mois</span></div>
+        <div style="font-size:10px;color:#94a3b8;display:flex;flex-direction:column;gap:5px;margin-bottom:16px;">
+          <div>✅ 2 animations (Fade, Slide)</div>
+          <div>✅ 2 polices (Bebas, Montserrat)</div>
+          <div>✅ 2 arrière-plans</div>
+          <div>✅ Preview temps réel</div>
+          <div>✅ 3 projets maximum</div>
+          <div style="color:#4a5568;">❌ Export MP4</div>
+          <div style="color:#4a5568;">❌ 20+ animations</div>
+          <div style="color:#4a5568;">❌ Export HD/4K</div>
+        </div>
+        <button onclick="closePricing()" style="width:100%;padding:9px;border-radius:7px;border:1px solid rgba(139,92,246,0.2);background:#13132e;color:#4a5568;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;">Continuer gratuitement</button>
+      </div>
+      <!-- PRO -->
+      <div style="background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(139,92,246,0.06));border:2px solid #f59e0b;border-radius:12px;padding:20px;position:relative;">
+        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#000;font-size:8px;font-weight:900;padding:3px 12px;border-radius:10px;white-space:nowrap;letter-spacing:1px;">⭐ RECOMMANDÉ</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;color:#f59e0b;margin-bottom:5px;">PRO</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;color:#f59e0b;margin-bottom:12px;">$15.78 <span style="font-size:11px;color:#4a5568;font-weight:400;">/mois</span></div>
+        <div style="font-size:10px;color:#e2e8f0;display:flex;flex-direction:column;gap:5px;margin-bottom:16px;">
+          <div>✅ 20+ animations pro</div>
+          <div>✅ 9 polices exclusives</div>
+          <div>✅ 9 arrière-plans + image</div>
+          <div>✅ Export MP4 illimité</div>
+          <div>✅ HD / Full HD / 4K</div>
+          <div>✅ Projets illimités</div>
+          <div>✅ BPM auto-detect</div>
+          <div>✅ Timeline avancée</div>
+        </div>
+        <button onclick="showPaymentMethods()" style="width:100%;padding:9px;border-radius:7px;border:none;background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;cursor:pointer;font-family:'Orbitron',sans-serif;font-size:10px;font-weight:900;letter-spacing:1px;">🚀 PASSER À PRO</button>
+      </div>
+    </div>
+    <!-- Payment methods -->
+    <div id="paymentMethods" style="display:none;border-top:1px solid rgba(139,92,246,0.2);padding-top:18px;">
+      <div style="font-size:10px;letter-spacing:2px;color:#4a5568;margin-bottom:10px;text-align:center;">CHOISISSEZ VOTRE MOYEN DE PAIEMENT</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button onclick="payStripe()" style="padding:13px;border-radius:8px;border:none;cursor:pointer;background:#635bff;color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;">💳 Stripe<br><small style="font-size:9px;opacity:0.8;">Carte bancaire</small></button>
+        <button onclick="payPayPal()" style="padding:13px;border-radius:8px;border:none;cursor:pointer;background:#003087;color:#fff;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;">🅿️ PayPal<br><small style="font-size:9px;opacity:0.8;">Compte PayPal</small></button>
+      </div>
+      <p style="text-align:center;font-size:9px;color:#4a5568;margin-top:10px;">🔒 Paiement sécurisé · Annulation à tout moment</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>
