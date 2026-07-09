@@ -308,6 +308,28 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   .adm-stats{grid-template-columns:1fr 1fr}
   .footer-bottom{flex-direction:column;text-align:center}
 }
+
+/* HERO SLIDER */
+.hero-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:center;}
+.hero-slider{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:16/10;background:var(--blue);flex-shrink:0;}
+.slider-track{width:100%;height:100%;position:relative;}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease;}
+.slide.active{opacity:1;}
+.slide img{width:100%;height:100%;object-fit:cover;}
+.slide-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:20px 16px 14px;}
+.slide-tag{display:inline-block;background:var(--orange);color:var(--dark);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;padding:2px 8px;border-radius:3px;margin-bottom:6px;}
+.slide-caption p{color:#fff;font-size:12px;font-weight:500;line-height:1.4;margin:0;}
+.slider-dots{position:absolute;bottom:10px;right:12px;display:flex;gap:5px;z-index:10;}
+.sdot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;}
+.sdot.active{background:var(--orange);transform:scale(1.2);}
+.slider-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;z-index:10;transition:all 0.2s;line-height:1;}
+.slider-arrow:hover{background:rgba(245,158,11,0.8);}
+.slider-arrow.prev{left:8px;}
+.slider-arrow.next{right:8px;}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-slider{aspect-ratio:16/9;}
+}
 </style>
 </head>
 <body>
@@ -361,16 +383,54 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.06);padding
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <span class="hero-tag" id="hero-tag">À la une</span>
-        <h1 id="hero-title">Bienvenue sur KPL509 — L'info qui ne dort jamais</h1>
-        <p class="hero-desc" id="hero-desc">Actualités mondiales, faits insolites, breaking news et bien plus. Notre équipe sélectionne chaque jour les meilleures histoires pour vous tenir informé.</p>
-        <div class="hero-meta">
-          <span id="hero-date">⏱ Aujourd'hui</span>
-          <span>Par la rédaction KPL509</span>
-          <span style="color:var(--orange);font-weight:600;cursor:pointer;" id="hero-read-btn">Lire l'article →</span>
+        <span class="hero-tag">🔴 KPL509 — En direct</span>
+        <h1>Bienvenue sur KPL509 — <span style="color:var(--orange);">L'info qui ne dort jamais</span></h1>
+        <p class="hero-desc">Actualités mondiales, faits insolites, breaking news et bien plus. Notre équipe sélectionne chaque jour les meilleures histoires pour vous tenir informé.</p>
+        <div class="hero-meta" style="margin-bottom:20px;">
+          <span>📍 Haiti & Monde</span>
+          <span>✍️ Par la rédaction KPL509</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span onclick="filterAndGo('actualites')" style="background:var(--orange);color:var(--dark);font-size:12px;font-weight:700;padding:8px 18px;border-radius:5px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;">📰 Actualités</span>
+          <span onclick="filterAndGo('breaking')" style="background:rgba(255,255,255,0.1);color:var(--white);font-size:12px;font-weight:700;padding:8px 18px;border-radius:5px;cursor:pointer;border:1px solid rgba(255,255,255,0.2);">🔴 Breaking News</span>
+          <span onclick="showPage('lyric')" style="background:rgba(255,255,255,0.1);color:var(--white);font-size:12px;font-weight:700;padding:8px 18px;border-radius:5px;cursor:pointer;border:1px solid rgba(255,255,255,0.2);">🎵 Lyric Video Pro</span>
         </div>
       </div>
-      <div class="hero-img"><img id="hero-img" src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="" onerror="this.style.display='none'"/></div>
+      <!-- IMAGE SLIDER -->
+      <div class="hero-slider" id="heroSlider">
+        <div class="slider-track" id="sliderTrack">
+          <div class="slide active">
+            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80" alt="Actualités"/>
+            <div class="slide-caption"><span class="slide-tag">📰 Actualités</span><p>Les dernières nouvelles du monde en temps réel</p></div>
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1532009324734-20a7a5813719?w=600&q=80" alt="Insolites"/>
+            <div class="slide-caption"><span class="slide-tag">🤯 Insolites</span><p>Les faits les plus étranges et surprenants</p></div>
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600&q=80" alt="Breaking News"/>
+            <div class="slide-caption"><span class="slide-tag">🔴 Breaking News</span><p>L'information en direct, minute par minute</p></div>
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600&q=80" alt="Lyric Video Pro"/>
+            <div class="slide-caption"><span class="slide-tag">🎵 Lyric Video Pro</span><p>Créez vos vidéos lyriques professionnelles</p></div>
+          </div>
+          <div class="slide">
+            <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=80" alt="Livres"/>
+            <div class="slide-caption"><span class="slide-tag">📚 Mes Livres</span><p>Découvrez les œuvres de Romedex Antoine</p></div>
+          </div>
+        </div>
+        <div class="slider-dots" id="sliderDots">
+          <span class="sdot active" onclick="goSlide(0)"></span>
+          <span class="sdot" onclick="goSlide(1)"></span>
+          <span class="sdot" onclick="goSlide(2)"></span>
+          <span class="sdot" onclick="goSlide(3)"></span>
+          <span class="sdot" onclick="goSlide(4)"></span>
+        </div>
+        <button class="slider-arrow prev" onclick="prevSlide()">‹</button>
+        <button class="slider-arrow next" onclick="nextSlide()">›</button>
+      </div>
+    </div>0" alt="" onerror="this.style.display='none'"/></div>
     </div>
   </section>
 
@@ -899,16 +959,7 @@ function renderArticles(){
   const grid=document.getElementById('articlesGrid');
   const pop=document.getElementById('popularList');
   if(!grid)return;
-  // Hero
-  if(ARTICLES.length>0){
-    const h=ARTICLES[0];
-    document.getElementById('hero-title').textContent=h.title;
-    document.getElementById('hero-desc').textContent=h.excerpt||'';
-    document.getElementById('hero-tag').textContent=CAT_NAMES[h.cat]||h.cat;
-    document.getElementById('hero-img').src=getImg(h);
-    document.getElementById('hero-date').textContent='⏱ '+formatDate(h.date);
-    document.getElementById('hero-read-btn').onclick=()=>openArticle(h.id);
-  }
+  // Hero section is permanent - no dynamic update
   // Grid
   grid.innerHTML=ARTICLES.map(a=>`
     <article class="card" data-cat="${a.cat}" onclick="openArticle(${a.id})">
@@ -1341,6 +1392,31 @@ if(isAdmin) showPage('admin');
 // Check URL params
 const params = new URLSearchParams(location.search);
 if(params.get('art')) openArticle(parseInt(params.get('art')));
+
+// ===== HERO SLIDER =====
+let slideIdx = 0;
+let slideTimer = null;
+
+function goSlide(n) {
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.sdot');
+  if(!slides.length) return;
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx = (n + slides.length) % slides.length;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+}
+function nextSlide(){ goSlide(slideIdx + 1); resetSlideTimer(); }
+function prevSlide(){ goSlide(slideIdx - 1); resetSlideTimer(); }
+function resetSlideTimer(){
+  clearInterval(slideTimer);
+  slideTimer = setInterval(nextSlide, 4500);
+}
+// Auto-start slider
+document.addEventListener('DOMContentLoaded', function(){
+  if(document.querySelector('.slide')) resetSlideTimer();
+});
 </script>
 </body>
 </html>
